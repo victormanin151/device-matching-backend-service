@@ -1,4 +1,4 @@
-package com.experia.device_matching_backend_service.controller.dto;
+package com.experia.device_matching_backend_service.dto;
 
 import java.time.LocalDateTime;
 

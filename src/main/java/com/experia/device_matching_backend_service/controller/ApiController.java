@@ -1,7 +1,7 @@
 package com.experia.device_matching_backend_service.controller;
 
 
-import com.experia.device_matching_backend_service.controller.dto.ApiInfoDto;
+import com.experia.device_matching_backend_service.dto.ApiInfoDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
