@@ -4,6 +4,9 @@ import nl.basjes.parse.useragent.UserAgent;
 import nl.basjes.parse.useragent.UserAgentAnalyzer;
 import org.springframework.stereotype.Component;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Component
 public class UserAgentParser {
 
@@ -27,6 +30,17 @@ public class UserAgentParser {
         String osName = userAgentAnalyzer.getValue(UserAgent.OPERATING_SYSTEM_NAME);
 
         String osVersion = userAgentAnalyzer.getValue(UserAgent.OPERATING_SYSTEM_VERSION);
+
+        if (osVersion.contains("??")) {
+            Matcher matcher = Pattern
+                    .compile("Windows NT ([0-9.]+)")
+                    .matcher(userAgentString);
+
+            if (matcher.find()) {
+                osVersion = matcher.group(1);
+            }
+        }
+        //did this since it read the version as ??
 
         String browserName = userAgentAnalyzer.getValue(UserAgent.AGENT_NAME);
 
