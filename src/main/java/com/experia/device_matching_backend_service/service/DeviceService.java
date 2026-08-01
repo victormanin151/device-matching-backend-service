@@ -57,6 +57,13 @@ public class DeviceService {
     public DeviceResponseDto findDeviceById(String id){
         Device device = deviceRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("No device with that ID"));
+        //fix later to return proper Status code (right now 500)
         return DeviceResponseDto.fromEntity(device);
+    }
+
+    public void deleteDevice(String id){
+        Device device = deviceRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("No device with that ID"));
+        deviceRepository.delete(device);
     }
 }
