@@ -8,8 +8,7 @@ import com.experia.device_matching_backend_service.repository.DeviceRepository;
 import org.springframework.data.aerospike.query.QueryParam;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class DeviceService {
@@ -61,9 +60,40 @@ public class DeviceService {
         return DeviceResponseDto.fromEntity(device);
     }
 
-    public void deleteDevice(String id){
+    public void deleteDeviceById(String id){
         Device device = deviceRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("No device with that ID"));
         deviceRepository.delete(device);
+    }
+
+    public void deleteDevices(List<String> ids) {
+
+        if (ids == null || ids.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "At least one device ID must be provided."
+            );
+        }
+
+        Set<String> uniqueIds = new HashSet<>(ids);
+
+        if (uniqueIds.size() != ids.size()) {
+            throw new IllegalArgumentException(
+                    "Duplicate device IDs are not allowed."
+            );
+        }
+
+        Iterable<Device> foundDevices =
+                deviceRepository.findAllById(ids);
+
+        List<Device> devices = new ArrayList<>();
+        foundDevices.forEach(devices::add);
+
+        if (ids.size() != devices.size()) {
+            throw new IllegalArgumentException(
+                    "One or more device IDs were not found."
+            );
+        }
+
+        deviceRepository.deleteAllById(ids);
     }
 }
