@@ -2,10 +2,7 @@ package com.experia.device_matching_backend_service.controller;
 
 import com.experia.device_matching_backend_service.dto.DeviceResponseDto;
 import com.experia.device_matching_backend_service.service.DeviceService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/devices")
@@ -15,6 +12,11 @@ public class DeviceController {
 
     public DeviceController(DeviceService deviceService) {
         this.deviceService = deviceService;
+    }
+
+    @GetMapping("/{id}")
+    public DeviceResponseDto getDeviceById(@PathVariable("id") String Id){
+        return deviceService.findDeviceById(Id);
     }
 
     @PostMapping("/match")
