@@ -51,26 +51,12 @@ public class DeviceService {
         }
         device = deviceRepository.save(device);
 
-        return new DeviceResponseDto(
-                device.getDeviceId(),
-                device.getHitCount(),
-                device.getOsName(),
-                device.getOsVersion(),
-                device.getBrowserName(),
-                device.getBrowserVersion()
-        );
+        return DeviceResponseDto.fromEntity(device);
     }
 
     public DeviceResponseDto findDeviceById(String id){
         Device device = deviceRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("No device with that ID"));
-        return new DeviceResponseDto(
-                device.getDeviceId(),
-                device.getHitCount(),
-                device.getOsName(),
-                device.getOsVersion(),
-                device.getBrowserName(),
-                device.getBrowserVersion()
-        );
+        return DeviceResponseDto.fromEntity(device);
     }
 }
