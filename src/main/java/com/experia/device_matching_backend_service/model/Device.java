@@ -1,5 +1,7 @@
 package com.experia.device_matching_backend_service.model;
 
+import com.aerospike.client.query.IndexType;
+import org.springframework.data.aerospike.annotation.Indexed;
 import org.springframework.data.aerospike.mapping.Document;
 import org.springframework.data.annotation.Id;
 
@@ -16,6 +18,11 @@ public class Device {
     private String osVersion;
 
     private String browserName;
+
+    @Indexed(
+            name = "device_browser_version_idx",
+            type = IndexType.STRING
+    )
 
     private String browserVersion;
 
