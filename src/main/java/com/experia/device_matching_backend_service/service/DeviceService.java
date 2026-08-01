@@ -5,10 +5,13 @@ import com.experia.device_matching_backend_service.model.Device;
 import com.experia.device_matching_backend_service.parser.ParsedUserAgent;
 import com.experia.device_matching_backend_service.parser.UserAgentParser;
 import com.experia.device_matching_backend_service.repository.DeviceRepository;
+import org.springframework.data.aerospike.query.QueryParam;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.UUID;
 
+@Service
 public class DeviceService {
 
     private final DeviceRepository deviceRepository;
@@ -23,11 +26,14 @@ public class DeviceService {
 
         ParsedUserAgent parsed = userAgentParser.parse(userAgent);
 
-        Optional<Device> existingDevice = deviceRepository.findByOsNameAndOsVersionAndBrowserNameAndBrowserVersion(
-                parsed.osName(),
-                parsed.osVersion(),
-                parsed.browserName(),
-                parsed.browserVersion());
+        Optional<Device> existingDevice =
+                deviceRepository
+                        .findByOsNameAndOsVersionAndBrowserNameAndBrowserVersion(
+                                QueryParam.of(parsed.osName()),
+                                QueryParam.of(parsed.osVersion()),
+                                QueryParam.of(parsed.browserName()),
+                                QueryParam.of(parsed.browserVersion())
+                        );
 
         Device device;
 
