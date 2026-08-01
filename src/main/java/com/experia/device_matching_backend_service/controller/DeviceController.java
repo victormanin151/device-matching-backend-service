@@ -2,6 +2,7 @@ package com.experia.device_matching_backend_service.controller;
 
 import com.experia.device_matching_backend_service.dto.DeviceResponseDto;
 import com.experia.device_matching_backend_service.service.DeviceService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,5 +25,11 @@ public class DeviceController {
             @RequestHeader("User-Agent") String userAgent
     ) {
         return deviceService.matchDevice(userAgent);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteDeviceById(@PathVariable("id") String id) {
+        deviceService.deleteDevice(id);
     }
 }
