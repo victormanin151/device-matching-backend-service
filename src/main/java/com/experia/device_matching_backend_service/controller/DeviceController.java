@@ -1,5 +1,6 @@
 package com.experia.device_matching_backend_service.controller;
 
+import com.experia.device_matching_backend_service.dto.DeleteDevicesRequestDto;
 import com.experia.device_matching_backend_service.dto.DeviceResponseDto;
 import com.experia.device_matching_backend_service.service.DeviceService;
 import org.springframework.http.HttpStatus;
@@ -16,8 +17,8 @@ public class DeviceController {
     }
 
     @GetMapping("/{id}")
-    public DeviceResponseDto getDeviceById(@PathVariable("id") String Id){
-        return deviceService.findDeviceById(Id);
+    public DeviceResponseDto getDeviceById(@PathVariable("id") String id){
+        return deviceService.findDeviceById(id);
     }
 
     @PostMapping("/match")
@@ -30,6 +31,14 @@ public class DeviceController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDeviceById(@PathVariable("id") String id) {
-        deviceService.deleteDevice(id);
+        deviceService.deleteDeviceById(id);
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteDevices(
+            @RequestBody DeleteDevicesRequestDto request
+    ) {
+        deviceService.deleteDevices(request.deviceIds());
     }
 }
