@@ -208,4 +208,15 @@ public class DeviceServiceTest {
 
     }
 
+    @Test
+    void shouldThrowWhenOsNameIsNullOrEmpty(){
+        String osName = "";
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> deviceService.findByOsName(osName)
+        );
+
+        assertEquals("osName is empty or null.", exception.getMessage());
+    }
 }
