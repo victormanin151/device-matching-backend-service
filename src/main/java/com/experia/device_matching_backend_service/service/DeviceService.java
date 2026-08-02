@@ -96,4 +96,19 @@ public class DeviceService {
 
         deviceRepository.deleteAllById(ids);
     }
+
+    public List<DeviceResponseDto> findByOsName (String osName){
+
+        if (osName == null || osName.isBlank()) {
+            throw new IllegalArgumentException(
+                    "osName is empty or null."
+            );
+        }
+
+        List<Device> devices = deviceRepository.findByOsName(osName);
+
+        return devices.stream()
+                .map(DeviceResponseDto::fromEntity)
+                .toList();
+    }
 }
