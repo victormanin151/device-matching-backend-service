@@ -18,8 +18,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class DeviceServiceTest {
@@ -240,5 +239,22 @@ public class DeviceServiceTest {
 
         verify(deviceRepository).findById(id);
         verify(deviceRepository).delete(device);
+    }
+
+    @Test
+    void shouldThrowWhenDeletingNonExistingDevice(){
+        String id = "device-123";
+
+        when(deviceRepository.findById(id))
+                .thenReturn(Optional.empty());
+
+        IllegalStateException exception = assertThrows(
+                IllegalStateException.class,
+                () -> deviceService.deleteDeviceById(id)
+        );
+
+        assertEquals("No device with that ID", exception.getMessage());
+
+        verify(deviceRepository, never()).delete(any(Device.class));
     }
 }
