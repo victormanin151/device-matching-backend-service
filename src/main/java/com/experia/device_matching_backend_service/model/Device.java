@@ -13,6 +13,10 @@ public class Device {
 
     private long hitCount;
 
+    @Indexed(
+            name = "device_os_name_idx",
+            type = IndexType.STRING
+    )
     private String osName;
 
     private String osVersion;
