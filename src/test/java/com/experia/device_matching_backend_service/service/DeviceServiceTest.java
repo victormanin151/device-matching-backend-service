@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.aerospike.query.QueryParam;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -156,4 +157,41 @@ public class DeviceServiceTest {
         assertEquals("No device with that ID", exception.getMessage());
     }
 
+    @Test
+    void shouldReturnDevicesWithMatchingOsName(){
+        String osName = "Windows NT";
+
+        Device firstDevice = new Device(
+                "device-1",
+                2L,
+                "Windows NT",
+                "10.0",
+                "Chrome",
+                "120"
+        );
+
+        Device secondDevice = new Device(
+                "device-2",
+                4L,
+                "Windows NT",
+                "10.0",
+                "Firefox",
+                "121"
+        );
+
+        List<Device> devices = List.of(firstDevice, secondDevice);
+
+        when(deviceRepository.findByOsName(osName)).thenReturn(devices);
+
+        List<DeviceResponseDto> result =
+                deviceService.findByOsName(osName);
+
+        assertEquals(2,result.size());
+        assertEquals("device-1", result.get(0).deviceId());
+        assertEquals("Chrome", result.get(0).browserName());
+        assertEquals("device-2", result.get(1).deviceId());
+        assertEquals("Firefox", result.get(1).browserName());
+
+        verify(deviceRepository).findByOsName(osName);
+    }
 }
