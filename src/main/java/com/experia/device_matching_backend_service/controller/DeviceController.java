@@ -6,6 +6,8 @@ import com.experia.device_matching_backend_service.service.DeviceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/devices")
 public class DeviceController {
@@ -40,5 +42,10 @@ public class DeviceController {
             @RequestBody DeleteDevicesRequestDto request
     ) {
         deviceService.deleteDevices(request.deviceIds());
+    }
+
+    @GetMapping
+    public List<DeviceResponseDto> getDeviceByOsName(@RequestParam String osName){
+        return deviceService.findByOsName(osName);
     }
 }
