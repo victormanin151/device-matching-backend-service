@@ -7,6 +7,7 @@ import com.experia.device_matching_backend_service.parser.UserAgentParser;
 import com.experia.device_matching_backend_service.repository.DeviceRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -15,6 +16,7 @@ import org.springframework.data.aerospike.query.QueryParam;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -70,4 +72,47 @@ public class DeviceServiceTest {
         verify(deviceRepository).save(existingDevice);
     }
 
+    @Test
+    void shouldCreateNewDeviceWhenDeviceDoesNotExist() {
+        ParsedUserAgent parsedUserAgent = new ParsedUserAgent(
+                "Windows NT",
+                "10.0",
+                "Chrome",
+                "120"
+        );
+
+        String userAgent = "test-user-agent";
+
+        when(userAgentParser.parse(userAgent)).thenReturn(parsedUserAgent);
+
+        when(deviceRepository.findByOsNameAndOsVersionAndBrowserNameAndBrowserVersion(
+                any(QueryParam.class),
+                any(QueryParam.class),
+                any(QueryParam.class),
+                any(QueryParam.class)
+        )).thenReturn(Optional.empty());
+
+        when(deviceRepository.save(any(Device.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        DeviceResponseDto result = deviceService.matchDevice(userAgent);
+
+        ArgumentCaptor<Device> captor = ArgumentCaptor.forClass(Device.class);
+
+        verify(deviceRepository).save(captor.capture());
+
+        Device savedDevice = captor.getValue();
+
+        assertEquals(1L, savedDevice.getHitCount());
+        assertEquals("Windows NT", savedDevice.getOsName());
+        assertEquals("10.0", savedDevice.getOsVersion());
+        assertEquals("Chrome", savedDevice.getBrowserName());
+        assertEquals("120", savedDevice.getBrowserVersion());
+        assertNotNull(savedDevice.getDeviceId());
+
+        assertEquals(1L, result.hitCount());
+        assertNotNull(result.deviceId());
+
+        assertEquals(savedDevice.getDeviceId(), result.deviceId());
+    }
 }
