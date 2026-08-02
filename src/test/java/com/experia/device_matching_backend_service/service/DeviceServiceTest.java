@@ -219,4 +219,26 @@ public class DeviceServiceTest {
 
         assertEquals("osName is empty or null.", exception.getMessage());
     }
+
+    @Test
+    void shouldDeleteDeviceWhenIdExists(){
+        String id = "device-123";
+
+        Device device = new Device(
+                id,
+                5L,
+                "Windows NT",
+                "10.0",
+                "Chrome",
+                "120"
+        );
+
+        when(deviceRepository.findById(id))
+                .thenReturn(Optional.of(device));
+
+        deviceService.deleteDeviceById(id);
+
+        verify(deviceRepository).findById(id);
+        verify(deviceRepository).delete(device);
+    }
 }
