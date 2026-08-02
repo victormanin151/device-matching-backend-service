@@ -115,4 +115,31 @@ public class DeviceServiceTest {
 
         assertEquals(savedDevice.getDeviceId(), result.deviceId());
     }
+
+    @Test
+    void shouldReturnDeviceById(){
+        String id = "device-123";
+
+        Device device = new Device(
+                id,
+                5L,
+                "Windows NT",
+                "10.0",
+                "Chrome",
+                "120"
+        );
+
+        when(deviceRepository.findById(id)).thenReturn(Optional.of(device));
+
+        DeviceResponseDto result =  deviceService.findDeviceById(id);
+
+        verify(deviceRepository).findById(id);
+
+        assertEquals(id,result.deviceId());
+        assertEquals(5L,result.hitCount());
+        assertEquals("Windows NT",result.osName());
+        assertEquals("10.0",result.osVersion());
+        assertEquals("Chrome",result.browserName());
+        assertEquals("120",result.browserVersion());
+    }
 }
