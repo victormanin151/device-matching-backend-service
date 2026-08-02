@@ -15,8 +15,7 @@ import org.springframework.data.aerospike.query.QueryParam;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -142,4 +141,19 @@ public class DeviceServiceTest {
         assertEquals("Chrome",result.browserName());
         assertEquals("120",result.browserVersion());
     }
+
+    @Test
+    void shouldThrowWhenDeviceIdDoesNotExist(){
+        String id = "device-123";
+
+        when(deviceRepository.findById(id)).thenReturn(Optional.empty());
+
+        IllegalStateException exception = assertThrows(
+                IllegalStateException.class,
+                () -> deviceService.findDeviceById(id)
+        );
+
+        assertEquals("No device with that ID", exception.getMessage());
+    }
+
 }
