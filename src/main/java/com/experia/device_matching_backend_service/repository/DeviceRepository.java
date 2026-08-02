@@ -4,6 +4,7 @@ import com.experia.device_matching_backend_service.model.Device;
 import org.springframework.data.aerospike.query.QueryParam;
 import org.springframework.data.aerospike.repository.AerospikeRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -16,4 +17,5 @@ public interface DeviceRepository
             QueryParam browserName,
             QueryParam browserVersion
     );
+    List<Device> findByOsName(String osName);
 }
