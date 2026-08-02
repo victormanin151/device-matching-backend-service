@@ -194,4 +194,18 @@ public class DeviceServiceTest {
 
         verify(deviceRepository).findByOsName(osName);
     }
+
+    @Test
+    void shouldReturnEmptyListWhenNoDevicesMatchOsName(){
+        String osName = "Windows NT";
+
+        when(deviceRepository.findByOsName(osName)).thenReturn(List.of());
+
+        List<DeviceResponseDto> result =
+                deviceService.findByOsName(osName);
+
+        assertTrue(result.isEmpty());
+
+    }
+
 }
