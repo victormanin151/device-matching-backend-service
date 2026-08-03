@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.aerospike.query.QueryParam;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -256,5 +257,39 @@ public class DeviceServiceTest {
         assertEquals("No device with that ID", exception.getMessage());
 
         verify(deviceRepository, never()).delete(any(Device.class));
+    }
+
+    @Test
+    void shouldDeleteMultipleDevices(){
+
+        List<String> ids = List.of("device-1", "device-2");
+
+        Device firstDevice = new Device(
+                "device-1",
+                2L,
+                "Windows NT",
+                "10.0",
+                "Chrome",
+                "120"
+        );
+
+        Device secondDevice = new Device(
+                "device-2",
+                4L,
+                "Windows NT",
+                "10.0",
+                "Firefox",
+                "121"
+        );
+
+        List<Device> devices = List.of(firstDevice,secondDevice);
+
+        when(deviceRepository.findAllById(ids))
+                .thenReturn(devices);
+
+        deviceService.deleteDevices(ids);
+
+        verify(deviceRepository).findAllById(ids);
+        verify(deviceRepository).deleteAllById(ids);
     }
 }
