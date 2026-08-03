@@ -1,6 +1,7 @@
 package com.experia.device_matching_backend_service.service;
 
 import com.experia.device_matching_backend_service.dto.DeviceResponseDto;
+import com.experia.device_matching_backend_service.exception.DeviceNotFoundException;
 import com.experia.device_matching_backend_service.model.Device;
 import com.experia.device_matching_backend_service.parser.ParsedUserAgent;
 import com.experia.device_matching_backend_service.parser.UserAgentParser;
@@ -55,14 +56,13 @@ public class DeviceService {
 
     public DeviceResponseDto findDeviceById(String id){
         Device device = deviceRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("No device with that ID"));
-        //fix later to return proper Status code (right now 500)
+                .orElseThrow(() -> new DeviceNotFoundException("No device with that ID"));
         return DeviceResponseDto.fromEntity(device);
     }
 
     public void deleteDeviceById(String id){
         Device device = deviceRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("No device with that ID"));
+                .orElseThrow(() -> new DeviceNotFoundException("No device with that ID"));
         deviceRepository.delete(device);
     }
 
