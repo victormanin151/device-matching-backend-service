@@ -326,4 +326,40 @@ public class DeviceServiceTest {
 
         assertEquals("Duplicate device IDs are not allowed.", exception.getMessage());
     }
+    @Test
+    void shouldThrowWhenOneOrMoreDeviceIdsDoNotExist(){
+        List<String> ids = List.of("device-1", "device-2", "device-3");
+
+        Device firstDevice = new Device(
+                "device-1",
+                2L,
+                "Windows NT",
+                "10.0",
+                "Chrome",
+                "120"
+        );
+
+        Device secondDevice = new Device(
+                "device-2",
+                4L,
+                "Windows NT",
+                "10.0",
+                "Firefox",
+                "121"
+        );
+
+        List<Device> devices = List.of(firstDevice,secondDevice);
+
+        when(deviceRepository.findAllById(ids))
+                .thenReturn(devices);
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> deviceService.deleteDevices(ids)
+        );
+
+        assertEquals("One or more device IDs were not found.", exception.getMessage());
+
+        verify(deviceRepository, never()).deleteAllById(any());
+    }
 }
