@@ -1,6 +1,7 @@
 package com.experia.device_matching_backend_service.service;
 
 import com.experia.device_matching_backend_service.dto.DeviceResponseDto;
+import com.experia.device_matching_backend_service.exception.DeviceNotFoundException;
 import com.experia.device_matching_backend_service.model.Device;
 import com.experia.device_matching_backend_service.parser.ParsedUserAgent;
 import com.experia.device_matching_backend_service.parser.UserAgentParser;
@@ -147,8 +148,8 @@ public class DeviceServiceTest {
 
         when(deviceRepository.findById(id)).thenReturn(Optional.empty());
 
-        IllegalStateException exception = assertThrows(
-                IllegalStateException.class,
+        DeviceNotFoundException exception = assertThrows(
+                DeviceNotFoundException.class,
                 () -> deviceService.findDeviceById(id)
         );
 
@@ -247,8 +248,8 @@ public class DeviceServiceTest {
         when(deviceRepository.findById(id))
                 .thenReturn(Optional.empty());
 
-        IllegalStateException exception = assertThrows(
-                IllegalStateException.class,
+        DeviceNotFoundException exception = assertThrows(
+                DeviceNotFoundException.class,
                 () -> deviceService.deleteDeviceById(id)
         );
 
