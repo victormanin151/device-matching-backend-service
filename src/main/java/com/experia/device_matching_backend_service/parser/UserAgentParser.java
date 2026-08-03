@@ -31,6 +31,12 @@ public class UserAgentParser {
 
         String osVersion = userAgentAnalyzer.getValue(UserAgent.OPERATING_SYSTEM_VERSION);
 
+        /**
+         *  YAUAA cannot resolve Windows 10 vs 11 from the frozen UA token; we approximate with the raw value,
+         *  accepting that Windows 11 is reported as 10.0"
+         * @param userAgentString
+         * @return
+         */
         if (osVersion.contains("??")) {
             Matcher matcher = Pattern
                     .compile("Windows NT ([0-9.]+)")
@@ -40,7 +46,6 @@ public class UserAgentParser {
                 osVersion = matcher.group(1);
             }
         }
-        //did this since it read the version as ??
 
         String browserName = userAgentAnalyzer.getValue(UserAgent.AGENT_NAME);
 
