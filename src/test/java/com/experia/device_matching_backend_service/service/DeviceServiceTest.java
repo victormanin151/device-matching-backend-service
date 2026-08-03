@@ -13,9 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.aerospike.query.QueryParam;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -291,5 +289,17 @@ public class DeviceServiceTest {
 
         verify(deviceRepository).findAllById(ids);
         verify(deviceRepository).deleteAllById(ids);
+    }
+
+    @Test
+    void shouldThrowWhenDeviceIdsAreNull(){
+        List<String> ids = null;
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> deviceService.deleteDevices(ids)
+        );
+
+        assertEquals("At least one device ID must be provided.", exception.getMessage());
     }
 }
