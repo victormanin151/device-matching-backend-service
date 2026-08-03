@@ -314,4 +314,16 @@ public class DeviceServiceTest {
 
         assertEquals("At least one device ID must be provided.", exception.getMessage());
     }
+
+    @Test
+    void shouldThrowWhenDuplicateDeviceIdsAreProvided(){
+        List<String> ids = List.of("device-1", "device-1");
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> deviceService.deleteDevices(ids)
+        );
+
+        assertEquals("Duplicate device IDs are not allowed.", exception.getMessage());
+    }
 }
