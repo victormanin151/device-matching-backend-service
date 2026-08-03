@@ -302,4 +302,16 @@ public class DeviceServiceTest {
 
         assertEquals("At least one device ID must be provided.", exception.getMessage());
     }
+
+    @Test
+    void shouldThrowWhenDeviceIdsAreEmpty(){
+        List<String> ids = List.of();
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> deviceService.deleteDevices(ids)
+        );
+
+        assertEquals("At least one device ID must be provided.", exception.getMessage());
+    }
 }
